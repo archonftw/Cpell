@@ -1,4 +1,6 @@
 #include"execute.h"
+#include "../Commands/cd.h"
+
 #include<unistd.h>
 #include<sys/wait.h>
 #include<iostream>
@@ -14,6 +16,12 @@ string executeCommand(vector<string> input){
             args[i]=const_cast<char*>(input[i].c_str());
         }
         args[input.size()]=NULL;
+
+        if(input[0]=="cd"){
+            if(input.size()==1) return "Path not provided...\\n";
+            changeDir(input[1]);
+            return "";
+        }
 
         execvp(args[0],args);
         perror("execvp failed");
