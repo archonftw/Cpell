@@ -2,36 +2,34 @@
 
 Cpell is a lightweight Unix shell written in C++ for Linux.
 
-The project is built from scratch to understand how Unix shells work internally, including processes, process groups, signals, file descriptors, environment variables, redirection, and job control.
+The project is built from scratch to understand how Unix shells work internally, including processes, signals, process groups, file descriptors, environment variables, redirection, and job control.
 
 ## Features
 
 * Execute external Linux commands
-* Built-in `cd`
-* Built-in `export`
-* Built-in `unset`
-* Built-in `env`
-* Built-in `jobs`
-* Built-in `bg`
-* Built-in `fg`
+* `cd` builtin
+* `export` builtin
+* `unset` builtin
+* `env` builtin
+* `jobs` builtin
+* `bg` builtin
+* `fg` builtin
 * Environment variable expansion
 * Input redirection with `<`
 * Output redirection with `>`
 * Append redirection with `>>`
-* Foreground process execution
-* Background process execution with `&`
+* Foreground processes
+* Background processes with `&`
 * Basic job control
 * Process groups
 * Signal handling
-* `Ctrl+C` interrupt handling
-* `Ctrl+Z` process stopping
+* `Ctrl+C` support
+* `Ctrl+Z` support
 * Command history
 * Command autocompletion using GNU Readline
 * Makefile-based build system
 
-## Building
-
-### Requirements
+## Requirements
 
 * Linux
 * C++17 compatible compiler
@@ -45,16 +43,16 @@ sudo apt update
 sudo apt install g++ make libreadline-dev
 ```
 
-### Build
+## Build
 
-Clone the repository and enter the project:
+Clone the repository:
 
 ```bash
 git clone https://github.com/archonftw/Cpell.git
 cd Cpell
 ```
 
-Build:
+Build Cpell:
 
 ```bash
 make
@@ -66,13 +64,13 @@ Run:
 ./cpell
 ```
 
-You can also build and run with:
+Or build and run directly:
 
 ```bash
 make run
 ```
 
-Clean build files:
+Clean build artifacts:
 
 ```bash
 make clean
@@ -80,7 +78,7 @@ make clean
 
 ## Usage
 
-Cpell can execute normal Linux commands:
+Cpell can execute external Linux commands:
 
 ```bash
 ls
@@ -88,13 +86,14 @@ pwd
 echo hello
 ```
 
-### Change directory
+### Change Directory
 
 ```bash
 cd /tmp
+pwd
 ```
 
-### Environment variables
+### Environment Variables
 
 ```bash
 export NAME=Archon
@@ -102,50 +101,50 @@ echo $NAME
 unset NAME
 ```
 
-### Redirection
+### Output Redirection
 
-Write output to a file:
+Overwrite a file:
 
 ```bash
 echo hello > output.txt
 ```
 
-Append output:
+Append to a file:
 
 ```bash
 echo world >> output.txt
 ```
 
-Read input from a file:
+### Input Redirection
 
 ```bash
 cat < output.txt
 ```
 
-### Background processes
+### Background Processes
 
-Run a command in the background:
+Run a process in the background:
 
 ```bash
 sleep 100 &
 ```
 
-View jobs:
+View running jobs:
 
 ```bash
 jobs
-```
-
-Move a job to the background:
-
-```bash
-bg 1
 ```
 
 Bring a job to the foreground:
 
 ```bash
 fg 1
+```
+
+Continue a stopped job in the background:
+
+```bash
+bg 1
 ```
 
 ### Signals
@@ -157,7 +156,7 @@ Ctrl+C  -> interrupt foreground process
 Ctrl+Z  -> stop foreground process
 ```
 
-The shell itself ignores these signals while foreground child processes restore their default behavior.
+The shell ignores these signals while foreground child processes restore their default signal behavior.
 
 ## Project Structure
 
@@ -168,19 +167,15 @@ Cpell/
 │   ├── cd.h
 │   ├── environments.cpp
 │   └── environments.h
-│
 ├── Execute/
 │   ├── execute.cpp
 │   └── execute.h
-│
 ├── Parsing/
 │   ├── parser.cpp
 │   └── parser.h
-│
 ├── utils/
 │   ├── code.cpp
 │   └── code.h
-│
 ├── main.cpp
 ├── Makefile
 ├── .gitignore
@@ -189,54 +184,54 @@ Cpell/
 
 ## Architecture
 
-At a high level, Cpell follows the basic shell execution flow:
+The basic execution flow is:
 
 ```text
 User Input
     |
     v
-Readline
+ Readline
     |
     v
-Parser
+  Parser
     |
     v
 Variable Expansion
     |
     v
-Built-in Command?
+Builtin Command?
    / \
  Yes  No
   |    |
   v    v
-Execute  fork()
+Execute fork()
          |
          v
-      Process Group
+   Process Group
          |
          v
-       execvp()
+      execvp()
          |
          v
-    External Command
+ External Command
 ```
 
-For foreground processes, Cpell transfers terminal control to the child's process group and waits for it.
+For foreground processes, Cpell transfers terminal control to the process group and waits for the process.
 
-For background processes, Cpell keeps track of the process group as a job and immediately returns control to the user.
+For background processes, Cpell keeps track of the process group as a job and immediately returns control to the shell.
 
-## Learning Goals
+## What I'm Learning
 
-Cpell is primarily a systems programming and learning project.
+Cpell is primarily a systems programming project built to understand how Unix shells interact with the operating system.
 
-The project is being developed to explore:
+The project covers:
 
-* Unix process creation
 * `fork()`
 * `execvp()`
 * `waitpid()`
 * Process groups
 * Terminal process groups
+* `setpgid()`
 * `tcsetpgrp()`
 * Signals
 * File descriptors
@@ -249,47 +244,45 @@ The project is being developed to explore:
 
 ## Roadmap
 
-Planned improvements include:
-
 * [ ] Pipelines (`cmd1 | cmd2`)
-* [ ] More robust parser
+* [ ] Improved command parser
 * [ ] Quoted strings
 * [ ] Escape characters
-* [ ] Improved error handling
-* [ ] More complete job control
+* [ ] More robust error handling
+* [ ] Complete job control
 * [ ] Proper `SIGCHLD` handling
 * [ ] Job completion notifications
 * [ ] Command aliases
-* [ ] Additional shell built-ins
-* [ ] Better POSIX compatibility
+* [ ] More shell builtins
 * [ ] Automated tests
+* [ ] Improved POSIX compatibility
 
 ## Why Cpell?
 
-Most shells hide the underlying Unix mechanisms behind a simple command prompt.
+The goal of Cpell isn't simply to create another command-line interface.
 
-Cpell is an attempt to build those mechanisms directly and understand what happens underneath:
+It is a hands-on project for understanding what happens underneath a Unix shell:
 
 ```text
-shell
-  |
-  +-- fork()
-  |
-  +-- process group
-  |
-  +-- terminal control
-  |
-  +-- signals
-  |
-  +-- file descriptors
-  |
-  +-- exec()
-  |
-  +-- waitpid()
+             Cpell
+               |
+       +-------+-------+
+       |       |       |
+     fork()  signals  parser
+       |
+   process group
+       |
+   terminal control
+       |
+    execvp()
+       |
+ external program
+       |
+   waitpid()
 ```
 
-The goal is not just to create another command-line interface, but to learn how a Unix shell actually interacts with the operating system.
+Building these components from scratch makes it possible to understand the relationship between a shell, processes, the terminal, and the Linux kernel.
 
 ## License
 
-This project is currently intended as a personal learning and systems-programming project.
+This project is currently a personal learning and systems programming project.
