@@ -1,0 +1,39 @@
+# Build output
+*.o
+*.out
+cpell
+main
+
+# C/C++ generated files
+*.a
+*.so
+*.d
+
+# Debug / crash files
+core
+core.*
+*.core
+
+# Test files
+test.txt
+test_cpell/
+tmp/
+temp/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CMake (if used later)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
