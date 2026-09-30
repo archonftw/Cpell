@@ -1,0 +1,1 @@
+ g++ -o main main.cpp ./Parsing/parser.cpp ./Execute/execute.cpp ./utils/code.cpp ./Commands/cd.cpp -lreadline && ./main
