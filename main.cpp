@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include<pwd.h>
 #include<unistd.h>
+#include<signal.h>
 
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -16,8 +17,9 @@
 using namespace std;
 
 int main() {
-    
-    // Enables autocomplete mode
+    signal(SIGINT,SIG_IGN);
+
+    // Enables autocomplete modes
     rl_attempted_completion_function = autocomplete;
     while (true) {
         uid_t uid = getuid();
