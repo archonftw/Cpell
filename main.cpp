@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include<pwd.h>
+#include<unistd.h>
 
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -14,12 +16,17 @@ using namespace std;
 
 int main() {
 
-    // Enable autocomplete
+    // Enables autocomplete mode
     rl_attempted_completion_function = autocomplete;
     while (true) {
-        string prompt = "[~/" + getPathFromHome() + "]$ ";
-        char* rawInput = readline(prompt.c_str());
+        uid_t uid = getuid();
+        struct passwd *pw = getpwuid(uid);    
+        string user = pw->pw_name;
+        string capitalizedUser = user;
+        capitalizedUser[0] = toupper(capitalizedUser[0]);
+        string prompt = user + "@" + capitalizedUser + ":/" + getPathFromHome() + "$ ";
 
+        char* rawInput = readline(prompt.c_str());
         if (rawInput == nullptr) {
             cout << endl;
             break;
