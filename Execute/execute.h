@@ -1,5 +1,10 @@
-#pragma once
-#include<vector>
-#include<string>
-using namespace std;
-string executeCommand(vector<string> input);
+#ifndef EXECUTE_H
+#define EXECUTE_H
+
+#include <string>
+#include <vector>
+
+void initShell();
+std::string executeCommand(std::vector<std::string> input);
+
+#endif

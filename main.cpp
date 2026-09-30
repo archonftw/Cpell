@@ -17,7 +17,7 @@
 using namespace std;
 
 int main() {
-    signal(SIGINT,SIG_IGN);
+    initShell();
 
     // Enables autocomplete modes
     rl_attempted_completion_function = autocomplete;
