@@ -30,7 +30,6 @@ string getPathFromHome() {
 }
 
 
-// Generate possible command completions
 char* commandGenerator(const char* text, int state) {
 
     static vector<string> matches;
@@ -109,17 +108,12 @@ char* commandGenerator(const char* text, int state) {
 }
 
 
-// Called by readline when TAB is pressed
 char** autocomplete(const char* text, int start, int end) {
-
-    // Only autocomplete the first word
     if (start == 0) {
-
         return rl_completion_matches(
             text,
             commandGenerator
         );
     }
-
     return nullptr;
 }
