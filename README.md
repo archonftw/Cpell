@@ -23,36 +23,7 @@ Cpell is a Linux shell project focused on understanding how shells interact with
 | ✓ | Command history            |
 | ✓ | Tab autocompletion         |
 
-### Built-ins
 
-```text
-cd
-export
-unset
-env
-jobs
-bg
-fg
-help
-exit
-```
-
-### Redirection
-
-```bash
-echo "hello" > file.txt
-echo "world" >> file.txt
-cat < file.txt
-```
-
-### Job Control
-
-```bash
-sleep 100 &
-jobs
-fg 1
-bg 1
-```
 
 Cpell uses Unix process groups and terminal control to manage foreground and background jobs.
 
