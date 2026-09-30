@@ -12,7 +12,6 @@ using namespace std;
 namespace fs = std::filesystem;
 
 
-// Built-in commands
 vector<string> commands = {
     "cd",
     "pwd",
@@ -20,21 +19,13 @@ vector<string> commands = {
     "exit"
 };
 
-
-// Get current directory name
 string getPathFromHome() {
-
     string str = filesystem::current_path().string();
-
     return str.substr(str.find_last_of("/") + 1);
 }
-
-
 char* commandGenerator(const char* text, int state) {
-
     static vector<string> matches;
     static size_t index;
-
     if (state == 0) {
 
         matches.clear();
@@ -42,7 +33,6 @@ char* commandGenerator(const char* text, int state) {
 
         string prefix(text);
 
-        // Add built-in commands
         for (const string& command : commands) {
 
             if (command.rfind(prefix, 0) == 0) {
@@ -50,27 +40,18 @@ char* commandGenerator(const char* text, int state) {
             }
         }
 
-
-        // Search executables in PATH
         const char* pathEnv = getenv("PATH");
-
         if (pathEnv != nullptr) {
-
             string path(pathEnv);
             size_t start = 0;
-
             while (start < path.size()) {
-
                 size_t end = path.find(':', start);
 
                 if (end == string::npos) {
                     end = path.size();
                 }
-
                 string directory = path.substr(start, end - start);
-
                 try {
-
                     for (const auto& entry : fs::directory_iterator(directory)) {
 
                         string filename =
@@ -89,26 +70,21 @@ char* commandGenerator(const char* text, int state) {
 
                 }
                 catch (const fs::filesystem_error&) {
-                    // Ignore directories we cannot access
                 }
 
                 start = end + 1;
             }
         }
     }
-
-
-    // Return next match
     if (index < matches.size()) {
 
         return strdup(matches[index++].c_str());
     }
-
     return nullptr;
 }
 
 
-char** autocomplete(const char* text, int start, int end) {
+char** autocomplete(const char* text, int start,int /*end*/) {
     if (start == 0) {
         return rl_completion_matches(
             text,

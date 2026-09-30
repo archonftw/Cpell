@@ -17,8 +17,8 @@
 using namespace std;
 
 int main() {
-    initShell();
 
+    initShell();
     // Enables autocomplete modes
     rl_attempted_completion_function = autocomplete;
     while (true) {
