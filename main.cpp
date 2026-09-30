@@ -11,11 +11,12 @@
 #include "./Parsing/parser.h"
 #include "./Execute/execute.h"
 #include "./utils/code.h"
+#include "./Commands/environments.h"
 
 using namespace std;
 
 int main() {
-
+    
     // Enables autocomplete mode
     rl_attempted_completion_function = autocomplete;
     while (true) {
@@ -24,8 +25,11 @@ int main() {
         string user = pw->pw_name;
         string capitalizedUser = user;
         capitalizedUser[0] = toupper(capitalizedUser[0]);
-        string prompt = user + "@" + capitalizedUser + ":/" + getPathFromHome() + "$ ";
-
+        string prompt = "\033[36m" +
+                user + "@" +
+                capitalizedUser + ":/" +
+                getPathFromHome() +
+                "$ \033[0m";
         char* rawInput = readline(prompt.c_str());
         if (rawInput == nullptr) {
             cout << endl;
@@ -36,20 +40,16 @@ int main() {
         if (!input.empty()) {
             add_history(rawInput);
         }
-
         free(rawInput);
 
         vector<string> parsedInput = parser(input);
 
         // Empty input
-        if (parsedInput.empty()) {
-            continue;
-        }
-
+        if (parsedInput.empty()) continue;
         // Exit
-        if (parsedInput[0] == "exit") {
-            break;
-        }
+        if (parsedInput[0] == "exit") break;
+
+        for(string& arg:parsedInput) arg = expandVariables(arg);
 
         cout << executeCommand(parsedInput) << endl;
     }

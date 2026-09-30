@@ -20,7 +20,6 @@ string executeCommand(vector<string> input) {
         changeDir(input[1]);
         return "";
     }
-
     if (input[0] == "help") {
         return R"(Cpell - A simple C++ shell Built-in commands:
           cd <directory>     Change the current directory
@@ -41,6 +40,45 @@ string executeCommand(vector<string> input) {
         )";
     }
 
+    //export
+    if(input[0]=="export"){
+        if(input.size()!=2){
+            return "Usage: export NAME=value\n";
+        }
+        string assignment = input[1];
+        size_t equalPos = assignment.find('=');
+        if (equalPos == string::npos) { 
+            return "Usage: export NAME=value\n";
+        }
+        string name = assignment.substr(0,equalPos);
+        string value = assignment.substr(equalPos+1);
+
+        if(name.empty()){
+            return "Invalid variable name\n";
+        }
+        setenv(name.c_str(),value.c_str(),1);
+        return"";
+
+    }
+    // unset
+    if (input[0] == "unset") {
+        if (input.size() != 2) {
+            return "Usage: unset NAME\n";
+        }
+
+        unsetenv(input[1].c_str());
+        return "";
+    }
+    // env
+    if (input[0] == "env") {
+        extern char** environ;
+    
+        for (char** env = environ; *env != nullptr; env++) {
+            cout << *env << '\n';
+        }
+    
+        return "";
+    }
     // External commands
     pid_t pid = fork();
     if (pid == 0) {
